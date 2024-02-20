@@ -1,15 +1,7 @@
 import styled from "styled-components";
 import { HiXMark } from "react-icons/hi2";
 import { createPortal } from "react-dom";
-import {
-  cloneElement,
-  createContext,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
-import { set } from "date-fns";
+import { cloneElement, createContext, useContext, useState } from "react";
 import { useOutsideClick } from "../hooks/useOutsideClick";
 
 const StyledModal = styled.div`
@@ -79,14 +71,13 @@ function Modal({ children }) {
 
 function Open({ children, opens: opensWindowName }) {
   const { open } = useContext(ModalContext);
-  //  cloneElement is used to add props to children
+  //   cloneElement is used to pass props to the children
   return cloneElement(children, { onClick: () => open(opensWindowName) });
 }
 
 function Window({ children, name }) {
   const { openName, close } = useContext(ModalContext);
-   const ref= useOutsideClick(close)
-
+  const ref = useOutsideClick(close);
   if (name !== openName) return null;
   //  createPortal is usefull to render a component outside of the
   //  normal DOM hierarchy for reusability and to avoid styling conflicts

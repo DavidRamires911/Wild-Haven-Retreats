@@ -42,6 +42,10 @@ function Filter({ filterField, options }) {
  
   function handleClick(value) {
     searchParams.set(filterField, value);
+
+    // Reset page to 1 when filter changes
+    if(searchParams.get('page')) searchParams.set("page", 1);
+    
     setSearchParams(searchParams);
   }
  
