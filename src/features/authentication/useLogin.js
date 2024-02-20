@@ -11,9 +11,10 @@ export function useLogin() {
       mutationFn: ({ email, password }) => loginApi({ email, password }),
       onSuccess: (user) => {
         // Update the cache with the user data
+        //can use user.user or user.session to get the user data
         queryClient.setQueryData(["user"], user.user);
         // Navigate to the dashboard after successful login
-        navigate("/dashboard");
+        navigate("/dashboard",{replace:true} );
       },
       onError: (err) => {
         console.log("Error", err);
