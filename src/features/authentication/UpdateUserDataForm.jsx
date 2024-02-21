@@ -8,7 +8,6 @@ import Input from "../../ui/Input";
 
 import { useUser } from "./useUser";
 import { useUpdateUser } from "./useUpdateUser";
-import { set } from "react-hook-form";
 
 function UpdateUserDataForm() {
   // We don't need the loading state, and can immediately use the user data,

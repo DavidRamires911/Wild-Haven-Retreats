@@ -93,6 +93,7 @@ function CabinRow({ cabin }) {
               <Menus.Button
                 icon={<HiDocumentDuplicate />}
                 onClick={handleDuplicate}
+                disabled={isCreating}
               >
                 Duplicate
               </Menus.Button>
