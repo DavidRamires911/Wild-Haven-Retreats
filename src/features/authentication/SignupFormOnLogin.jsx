@@ -1,38 +1,43 @@
-import { useForm } from "react-hook-form";
 import Button from "../../ui/Button";
 import Form from "../../ui/Form";
 import FormRow from "../../ui/FormRow";
 import Input from "../../ui/Input";
+import { useForm } from "react-hook-form";
 import { useSignup } from "./useSignup";
+import FormRowVertical from "../../ui/FormRowVertical";
+import { useState } from "react";
 
 // Email regex: /\S+@\S+\.\S+/
 
-function SignupForm() {
+function SignupFormOnLogin({ onSignupSuccess }) {
   const { signup, isLoading } = useSignup();
   const { register, formState, getValues, handleSubmit, reset } = useForm();
+  const [showSignup, setShowSignup] = useState(false);
+
+
   const { errors } = formState;
 
   function onSubmit({ fullName, email, password }) {
-    signup(
-      { fullName, email, password },
-      {
-        onSettled: () => reset(),
-      }
-    );
+    signup({ fullName, email, password },  {
+      onSettled: () => reset(),
+      onSuccess: () => {
+        if(onSignupSuccess) onSignupSuccess();
+      },
+    });
   }
-
+ 
   return (
     <Form onSubmit={handleSubmit(onSubmit)}>
-      <FormRow label="Full name" error={errors?.fullName?.message}>
+      <FormRowVertical label="Full name" error={errors?.fullName?.message}>
         <Input
           type="text"
           id="fullName"
           disabled={isLoading}
           {...register("fullName", { required: "This field is required" })}
         />
-      </FormRow>
+      </FormRowVertical>
 
-      <FormRow label="Email address" error={errors?.email?.message}>
+      <FormRowVertical label="Email address" error={errors?.email?.message}>
         <Input
           type="email"
           id="email"
@@ -41,13 +46,13 @@ function SignupForm() {
             required: "This field is required",
             pattern: {
               value: /\S+@\S+\.\S+/,
-              message: "Please provide a valid email address",
+              message: "Invalid email address",
             },
           })}
         />
-      </FormRow>
+      </FormRowVertical>
 
-      <FormRow
+      <FormRowVertical
         label="Password (min 8 characters)"
         error={errors?.password?.message}
       >
@@ -59,13 +64,13 @@ function SignupForm() {
             required: "This field is required",
             minLength: {
               value: 8,
-              message: "Password needs a minimum of 8 characters",
+              message: "Password must be at least 8 characters",
             },
           })}
         />
-      </FormRow>
+      </FormRowVertical>
 
-      <FormRow label="Repeat password" error={errors?.passwordConfirm?.message}>
+      <FormRowVertical label="Repeat password" error={errors?.passwordConfirm?.message}>
         <Input
           type="password"
           id="passwordConfirm"
@@ -73,19 +78,14 @@ function SignupForm() {
           {...register("passwordConfirm", {
             required: "This field is required",
             validate: (value) =>
-              value === getValues().password || "Passwords need to match",
+              value === getValues().password || "The passwords do not match",
           })}
         />
-      </FormRow>
+      </FormRowVertical>
 
       <FormRow>
         {/* type is an HTML attribute! */}
-        <Button
-          variation="secondary"
-          type="reset"
-          disabled={isLoading}
-          onClick={reset}
-        >
+        <Button $variation="secondary" type="reset" disabled={isLoading} onClick={reset} >
           Cancel
         </Button>
         <Button disabled={isLoading}>Create new user</Button>
@@ -94,4 +94,4 @@ function SignupForm() {
   );
 }
 
-export default SignupForm;
+export default SignupFormOnLogin;
